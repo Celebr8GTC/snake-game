@@ -22,57 +22,80 @@
   }
   #wrap { transform-origin: center center; display: flex; flex-direction: column; align-items: center; }
 
-  /* ---- 3310 body ---- */
-  .phone {
-    position: relative; width: 300px; padding: 26px 22px 34px;
-    background:
-      radial-gradient(120% 60% at 30% 10%, rgba(255,255,255,.16), transparent 55%),
-      linear-gradient(165deg, #34497a 0%, #22325a 45%, #18233f 100%);
-    border-radius: 140px 140px 90px 90px / 70px 70px 60px 60px;
-    box-shadow: 0 30px 60px rgba(0,0,0,.6), inset 0 2px 2px rgba(255,255,255,.25), inset 0 -6px 14px rgba(0,0,0,.45);
-  }
-  .earpiece { width: 54px; height: 7px; margin: 4px auto 12px; border-radius: 4px;
-    background: repeating-linear-gradient(90deg, #0b1020 0 4px, #273559 4px 7px); box-shadow: inset 0 1px 2px #000; }
-  .logo { text-align: center; color: #dfe4ee; font-family: "Arial Black", Arial, sans-serif; font-weight: 900;
-    font-size: 20px; letter-spacing: 3px; margin-bottom: 10px; text-shadow: 0 1px 0 rgba(0,0,0,.5); transform: scaleX(1.15); }
+  /* ---- Nokia 3310 body (shell, silver surround, logo, earpiece and mic are drawn in the SVG) ---- */
+  .phone { position: relative; width: 300px; height: 710px; flex: none; }
+  .shell { position: absolute; inset: 0; width: 300px; height: 710px; overflow: visible; pointer-events: none;
+    filter: drop-shadow(0 26px 30px rgba(0,0,0,.55)) drop-shadow(0 4px 6px rgba(0,0,0,.4)); }
 
-  .bezel { background: linear-gradient(180deg, #4a5674, #2f3a55); padding: 12px 12px 14px; border-radius: 16px 16px 26px 26px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.15); }
-  .lcd { position: relative; border-radius: 4px; padding: 4px 6px 3px;
+  /* screen window: dark frame + LCD with the curved bottom edge */
+  .bezel { position: absolute; left: 31px; top: 177px; width: 238px; padding: 3px;
+    border-radius: 9px 9px 50% 50% / 9px 9px 24px 24px;
+    background: linear-gradient(180deg, #1b2130, #2b3346 60%, #3a4357);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.55), 0 1px 0 1px rgba(255,255,255,.08), inset 0 1px 3px rgba(0,0,0,.8); }
+  .lcd { position: relative; padding: 4px 4px 5px; border-radius: 6px 6px 50% 50% / 6px 6px 21px 21px;
     background: radial-gradient(ellipse at 50% 45%, #b9d24c 0%, #a3c13b 55%, #86a52b 100%);
-    box-shadow: inset 0 0 12px rgba(40,60,0,.55); color: #1f2a0d; font-family: "Courier New", monospace; font-weight: 700; }
-  .lcd::after { content: ""; position: absolute; inset: 0; border-radius: 4px; pointer-events: none;
+    box-shadow: inset 0 0 12px rgba(40,60,0,.55), inset 0 2px 4px rgba(0,0,0,.35); color: #1f2a0d; font-family: "Courier New", monospace; font-weight: 700; overflow: hidden; }
+  .lcd::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
     background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
     background-size: 3px 3px; }
   .hud, .soft { display: flex; justify-content: space-between; font-size: 13px; line-height: 15px; }
-  .soft { justify-content: center; font-size: 12px; margin-top: 2px; }
-  canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+  .hud { padding: 0 3px; }
+  .soft { justify-content: center; font-size: 14px; margin-top: 1px; letter-spacing: .5px; }
+  /* playfield flanked by the 3310 idle indicators: signal (left) and battery (right) */
+  .scr { display: grid; grid-template-columns: 14px minmax(0, 1fr) 14px; column-gap: 3px; align-items: end; }
+  .ind { display: block; fill: #1f2a0d; margin-bottom: 2px; }
+  /* smooth when the 288px canvas is drawn smaller than its pixels (keeps text clean), crisp blocks on high-DPI screens */
+  canvas { display: block; width: 100%; height: auto; image-rendering: auto; }
+  @media (min-resolution: 2dppx) { canvas { image-rendering: pixelated; } }
 
-  /* ---- keys ---- */
-  .nav { display: grid; grid-template-columns: 1fr 1.6fr 1fr; align-items: center; gap: 8px; margin: 16px 2px 14px; }
-  .key { border: none; cursor: pointer; font-family: Arial, sans-serif; font-weight: 700; color: #1b2440;
-    background: linear-gradient(180deg, #e3e8f0, #b9c2d2); box-shadow: 0 3px 0 #6d7891, 0 4px 6px rgba(0,0,0,.4); }
-  .key:active, .key.down { transform: translateY(2px); box-shadow: 0 1px 0 #6d7891, 0 2px 3px rgba(0,0,0,.4); }
-  .ckey { height: 34px; border-radius: 18px 10px 10px 22px; font-size: 15px; }
-  .navi { height: 40px; border-radius: 50% / 60%; background: linear-gradient(180deg, #5d79b8, #2f4785);
-    box-shadow: 0 3px 0 #16234a, 0 5px 8px rgba(0,0,0,.5), inset 0 2px 2px rgba(255,255,255,.35); color: #dfe6f5; font-size: 10px; letter-spacing: 1px; }
-  .navi:active, .navi.down { box-shadow: 0 1px 0 #16234a, inset 0 2px 2px rgba(255,255,255,.35); }
-  .rocker { display: flex; flex-direction: column; border-radius: 10px 18px 22px 10px; overflow: hidden; box-shadow: 0 3px 0 #6d7891, 0 4px 6px rgba(0,0,0,.4); }
-  .rocker .key { height: 18px; box-shadow: none; border-radius: 0; font-size: 9px; }
-  .rocker .key + .key { border-top: 1px solid #8792a8; }
-  .rocker .key:active, .rocker .key.down { transform: none; filter: brightness(.88); }
+  /* ---- keys (shared) ---- */
+  .nav, .pad { position: absolute; inset: 0; pointer-events: none; }
+  .nav > *, .pad > * { pointer-events: auto; }
+  .key { position: absolute; border: none; cursor: pointer; font-family: Arial, Helvetica, sans-serif; color: #1d4b29;
+    transform: rotate(var(--r, 0deg));
+    background: radial-gradient(120% 90% at 35% 25%, #ffffff 0%, #e4e7ec 35%, #c3c8d0 75%, #a7adb8 100%);
+    box-shadow: 0 0 0 2px #121a2c, 0 0 0 3px rgba(80,96,130,.45), inset 0 -2px 3px rgba(60,70,90,.45), inset 0 1px 1px rgba(255,255,255,.9); }
+  .key:active, .key.down { transform: rotate(var(--r, 0deg)) translateY(1.5px) scale(.97); filter: brightness(.86); }
 
-  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px 12px; padding: 0 4px; }
-  .pad .key { height: 34px; border-radius: 17px; font-size: 16px; position: relative; }
-  .pad .key small { font-size: 8px; font-weight: 400; color: #4b5675; margin-left: 3px; }
-  .pad .key:nth-child(3n+1) { transform: rotate(-7deg); } .pad .key:nth-child(3n) { transform: rotate(7deg); }
-  .pad .key:nth-child(3n+2) { top: 6px; }
-  .pad .key:nth-child(3n+1):active, .pad .key:nth-child(3n+1).down { transform: rotate(-7deg) translateY(2px); }
-  .pad .key:nth-child(3n):active, .pad .key:nth-child(3n).down { transform: rotate(7deg) translateY(2px); }
-  .pad .arrow { color: #2f4785; }
-  .mic { width: 4px; height: 4px; border-radius: 50%; background: #0b1020; margin: 18px auto 0; }
+  /* Navi key: big silver oval with the blue bar */
+  .navi { position: absolute; left: 89px; top: 366px; width: 122px; height: 33px; border: none; cursor: pointer; border-radius: 50%;
+    background: radial-gradient(110% 120% at 50% 15%, #f4f6f9 0%, #d4d9e2 40%, #aab2c1 85%, #8f98a9 100%);
+    box-shadow: 0 0 0 2px #1a2236, 0 0 0 3px rgba(255,255,255,.25), inset 0 -3px 4px rgba(40,55,90,.45), inset 0 2px 2px rgba(255,255,255,.9); }
+  .navi::after { content: ""; position: absolute; left: 50%; top: 9px; width: 50px; height: 4px; margin-left: -25px; border-radius: 3px;
+    background: linear-gradient(180deg, #7cc4ff, #2c8be0 60%, #1d6fc0); box-shadow: 0 0 4px rgba(60,160,255,.6); }
+  .navi:active, .navi.down { transform: translateY(1.5px) scale(.98); filter: brightness(.88); }
 
-  .hint { color: #7d89a6; font-size: 11px; margin-top: 14px; text-align: center; line-height: 1.5; }
+  /* C key (left) and the up/down scroll rocker (right), angled along the silver surround */
+  .ckey { left: 45px; top: 395px; width: 54px; height: 32px; --r: 28deg; border-radius: 9px 12px 12px 9px / 12px 12px 12px 12px; }
+  .ckey .cmark { position: absolute; left: 21px; top: 9px; width: 10px; height: 14px; border-radius: 50%;
+    border-left: 3px solid #1d4b29; transform: rotate(-28deg); }
+  .rocker { position: absolute; left: 174px; top: 402px; width: 90px; height: 36px; transform: rotate(-29deg);
+    display: flex; flex-direction: row-reverse; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 0 0 2px #121a2c, 0 0 0 3px rgba(80,96,130,.45); }
+  .rocker { background: radial-gradient(90% 120% at 40% 15%, #ffffff 0%, #e2e6eb 35%, #c0c6cf 75%, #a3aab6 100%); }
+  .rocker .key { position: relative; flex: 1; height: 100%; border-radius: 0; --r: 0deg; box-shadow: none; background: transparent; }
+  .rocker .key:active, .rocker .key.down { transform: none; filter: none; background: rgba(20,30,60,.16); }
+  .rocker .mk { position: absolute; width: 9px; height: 9px; border: 0 solid #1d4b29; }
+  .rocker #spdUp .mk { right: 12px; top: 9px; border-top-width: 3px; border-right-width: 3px; border-top-right-radius: 8px; }
+  .rocker #spdDn .mk { left: 12px; bottom: 9px; border-bottom-width: 3px; border-left-width: 3px; border-bottom-left-radius: 8px; }
+  .rocker::after { content: ""; position: absolute; inset: 0; border-radius: 12px; pointer-events: none;
+    box-shadow: inset 0 -2px 3px rgba(60,70,90,.45), inset 0 1px 1px rgba(255,255,255,.9); }
+
+  /* 12-key pad in the 3310's "smile" layout: side columns tilted, centre column lower */
+  .pad .key { width: 58px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; gap: 2px; padding-top: 1px; }
+  .pad .key.mid { width: 62px; height: 33px; }
+  .pad .key.l { --r: 15deg; } .pad .key.r { --r: -15deg; flex-direction: row-reverse; }
+  .pad b, .pad .arrow { font-weight: 900; font-size: 17px; line-height: 1; }
+  .pad small { font-weight: 700; font-size: 9.5px; line-height: 1; letter-spacing: .2px; }
+  .pad .key.l b, .pad .key.l .arrow, .pad .key.r b, .pad .key.r .arrow { transform: translateY(-4px); }
+  .pad .key.l small, .pad .key.r small { transform: translateY(3px); }
+  .pad .key.mid small { transform: translateY(1px); }
+  .pad .key.tall { flex-direction: column; align-items: flex-start; gap: 0; padding-left: 14px; }
+  .pad .key.tall b { transform: none; } .pad .key.tall small { transform: none; margin-left: 9px; margin-top: -1px; }
+  .pad svg { display: block; fill: none; stroke: #1d4b29; stroke-width: 1.6; }
+  .pad .key.r svg, .pad .key.l svg { transform: translateY(3px); margin: 0 1px; }
+
+  .hint { color: #7d89a6; font-size: 11px; margin-top: 12px; text-align: center; line-height: 1.5; }
   .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: #a3c13b; color: #1f2a0d;
     font-weight: 700; padding: 10px 16px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.5); display: none; z-index: 9; white-space: nowrap; }
 </style>
@@ -80,38 +103,113 @@
 <body>
 <div id="wrap">
   <div class="phone" id="phone">
-    <div class="earpiece"></div>
-    <div class="logo">BASHAR</div>
+    <svg class="shell" viewBox="0 0 300 710" aria-hidden="true">
+      <defs>
+        <linearGradient id="gBody" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#151c30"/><stop offset=".07" stop-color="#26304d"/><stop offset=".3" stop-color="#34405f"/>
+          <stop offset=".55" stop-color="#2d3856"/><stop offset=".9" stop-color="#232c47"/><stop offset="1" stop-color="#121829"/>
+        </linearGradient>
+        <linearGradient id="gShade" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".25" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".8" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/>
+        </linearGradient>
+        <linearGradient id="gGloss" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".16" stop-color="#fff" stop-opacity=".0"/>
+          <stop offset=".24" stop-color="#fff" stop-opacity=".13"/><stop offset=".34" stop-color="#fff" stop-opacity="0"/>
+          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="gSilver" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="#e3e6eb"/><stop offset=".35" stop-color="#c4c9d1"/><stop offset=".7" stop-color="#aeb4be"/><stop offset="1" stop-color="#959ca8"/>
+        </linearGradient>
+        <linearGradient id="gFace" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#232c48"/><stop offset=".3" stop-color="#303b5b"/><stop offset=".7" stop-color="#2a3452"/><stop offset="1" stop-color="#1f2741"/>
+        </linearGradient>
+        <radialGradient id="gFaceHi" cx=".35" cy=".08" r=".6">
+          <stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="gPlate" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#3a3e46"/><stop offset=".5" stop-color="#1c1f25"/><stop offset="1" stop-color="#111317"/>
+        </linearGradient>
+        <linearGradient id="gLogo" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#eef0f3"/><stop offset=".55" stop-color="#c9ced6"/><stop offset="1" stop-color="#e6e9ee"/>
+        </linearGradient>
+        <clipPath id="cLetters"><rect x="-10" y="0" width="820" height="100"/></clipPath>
+      </defs>
+      <!-- body: rounded top with shoulders, slight waist, rounded bottom -->
+      <path id="body" d="M150,0 C236,0 287,4 295,34 C299,50 300,70 300,92 C300,205 296,330 296,425 C296,505 300,565 300,640 C300,682 293,700 268,705 C232,710 190,710 150,710 C110,710 68,710 32,705 C7,700 0,682 0,640 C0,565 4,505 4,425 C4,330 0,205 0,92 C0,70 1,50 5,34 C13,4 64,0 150,0 Z" fill="url(#gBody)"/>
+      <path d="M150,0 C236,0 287,4 295,34 C299,50 300,70 300,92 C300,205 296,330 296,425 C296,505 300,565 300,640 C300,682 293,700 268,705 C232,710 190,710 150,710 C110,710 68,710 32,705 C7,700 0,682 0,640 C0,565 4,505 4,425 C4,330 0,205 0,92 C0,70 1,50 5,34 C13,4 64,0 150,0 Z" fill="url(#gShade)"/>
+      <path d="M150,0 C236,0 287,4 295,34 C299,50 300,70 300,92 C300,205 296,330 296,425 C296,505 300,565 300,640 C300,682 293,700 268,705 C232,710 190,710 150,710 C110,710 68,710 32,705 C7,700 0,682 0,640 C0,565 4,505 4,425 C4,330 0,205 0,92 C0,70 1,50 5,34 C13,4 64,0 150,0 Z" fill="url(#gGloss)" stroke="#4a5980" stroke-opacity=".7" stroke-width="1.2"/>
+      <!-- silver surround: thin over the top, down both sides, sweeping under the screen around the Navi, C and scroll keys -->
+      <path d="M150,4 C232,4 282,7 290,35 C293,50 294,70 294,92 C294,205 290,320 289,372 C288,425 230,464 150,464 C70,464 12,425 11,372 C10,320 6,205 6,92 C6,70 7,50 10,35 C18,7 68,4 150,4 Z"
+            fill="url(#gSilver)" stroke="#0e1424" stroke-opacity=".55" stroke-width="1"/>
+      <path d="M11.5,35.5 C20,8.5 70,5.5 150,5.5 C230,5.5 280,8.5 288.5,35.5" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1"/>
+      <!-- navy upper face holding earpiece, logo and screen -->
+      <path d="M150,13 C226,13 270,16 276,40 C279,53 279,70 279,92 L278,300 C278,345 228,373 150,373 C72,373 22,345 22,300 L21,92 C21,70 21,53 24,40 C30,16 74,13 150,13 Z"
+            fill="url(#gFace)" stroke="#0b1120" stroke-opacity=".8" stroke-width="1.4"/>
+      <path d="M150,13 C226,13 270,16 276,40 C279,53 279,70 279,92 L278,300 C278,345 228,373 150,373 C72,373 22,345 22,300 L21,92 C21,70 21,53 24,40 C30,16 74,13 150,13 Z" fill="url(#gFaceHi)"/>
+      <!-- earpiece: five slots in a vertical column -->
+      <g fill="#0b0f1b" stroke="#55648a" stroke-opacity=".5" stroke-width=".6">
+        <rect x="144.5" y="20" width="11" height="5" rx="2.5"/><rect x="144.5" y="37" width="11" height="5" rx="2.5"/>
+        <rect x="144.5" y="54" width="11" height="5" rx="2.5"/><rect x="144.5" y="71" width="11" height="5" rx="2.5"/>
+        <rect x="144.5" y="88" width="11" height="5" rx="2.5"/>
+      </g>
+      <!-- logo plate with BASHAR in a wide, bold Nokia-style wordmark (drawn as paths so it looks the same on every device) -->
+      <rect x="95" y="124" width="110" height="22" rx="2" fill="url(#gPlate)" stroke="#6b7180" stroke-opacity=".6" stroke-width=".8"/>
+      <g transform="translate(104.6 129.3) scale(0.1155)" clip-path="url(#cLetters)">
+        <g fill="none" stroke="url(#gLogo)" stroke-width="25" stroke-linejoin="miter">
+          <!-- B -->
+          <path d="M12.5,0 V100 M0,12.5 H74 C92,12.5 99,21 99,31 C99,41 92,50 74,50 H12.5 M12.5,50 H78 C97,50 105,58.5 105,69 C105,79 97,87.5 78,87.5 H0"/>
+          <!-- S (x 245) -->
+          <path transform="translate(262 0)" d="M112,12.5 H36 C18,12.5 12.5,22 12.5,31 C12.5,41 19,50 36,50 H76 C93,50 99.5,59 99.5,69 C99.5,78.5 93,87.5 76,87.5 H0"/>
+          <!-- H (x 392) -->
+          <path transform="translate(394 0)" d="M12.5,0 V100 M107.5,0 V100 M12.5,50 H107.5"/>
+          <!-- R (x 666) -->
+          <path transform="translate(668 0)" d="M12.5,100 V12.5 H76 C94,12.5 101,22 101,33 C101,44 94,53.5 76,53.5 H12.5 M62,53.5 L104,104"/>
+        </g>
+        <g fill="url(#gLogo)">
+          <!-- A (x 123) and A (x 532) -->
+          <path transform="translate(123 0)" d="M0,100 L46,0 L78,0 L124,100 L96,100 L86.3,79 L37.7,79 L28,100 Z M46.4,60 L77.6,60 L62,26 Z" fill-rule="evenodd"/>
+          <path transform="translate(532 0)" d="M0,100 L46,0 L78,0 L124,100 L96,100 L86.3,79 L37.7,79 L28,100 Z M46.4,60 L77.6,60 L62,26 Z" fill-rule="evenodd"/>
+        </g>
+      </g>
+      <!-- small marks between 5 and 8, and the microphone hole at the bottom -->
+      <circle cx="143" cy="569" r="1.3" fill="#0b0f1b"/><circle cx="157" cy="569" r="1.3" fill="#0b0f1b"/>
+      <circle cx="150" cy="692" r="2.6" fill="#05080f" stroke="#56658c" stroke-opacity=".55" stroke-width=".8"/>
+    </svg>
+
     <div class="bezel">
       <div class="lcd">
         <div class="hud"><span id="score">0000</span><span id="best">HI 0000</span></div>
-        <canvas id="c" width="288" height="168"></canvas>
+        <div class="scr">
+          <svg class="ind" id="sig" viewBox="0 0 7 48" width="14" height="96" aria-hidden="true" shape-rendering="crispEdges"><rect x="0" y="0" width="3" height="8"/><rect x="0" y="10" width="3" height="8"/><rect x="0" y="20" width="3" height="8"/><rect x="0" y="30" width="3" height="8"/><rect x="0" y="40" width="7" height="1"/><rect x="0" y="41" width="1" height="1"/><rect x="2" y="41" width="3" height="1"/><rect x="6" y="41" width="1" height="1"/><rect x="3" y="42" width="1" height="1"/><rect x="3" y="43" width="1" height="1"/><rect x="3" y="44" width="1" height="1"/><rect x="3" y="45" width="1" height="1"/><rect x="3" y="46" width="1" height="1"/><rect x="3" y="47" width="1" height="1"/></svg>
+          <canvas id="c" width="288" height="168"></canvas>
+          <svg class="ind" id="batt" viewBox="0 0 7 48" width="14" height="96" aria-hidden="true" shape-rendering="crispEdges"><rect x="4" y="0" width="3" height="8"/><rect x="4" y="10" width="3" height="8"/><rect x="4" y="20" width="3" height="8"/><rect x="4" y="30" width="3" height="8"/><rect x="3" y="40" width="2" height="1"/><rect x="1" y="41" width="6" height="1"/><rect x="1" y="42" width="1" height="1"/><rect x="6" y="42" width="1" height="1"/><rect x="1" y="43" width="1" height="1"/><rect x="6" y="43" width="1" height="1"/><rect x="1" y="44" width="1" height="1"/><rect x="6" y="44" width="1" height="1"/><rect x="1" y="45" width="1" height="1"/><rect x="6" y="45" width="1" height="1"/><rect x="1" y="46" width="1" height="1"/><rect x="6" y="46" width="1" height="1"/><rect x="1" y="47" width="6" height="1"/></svg>
+        </div>
         <div class="soft" id="soft">Start</div>
       </div>
     </div>
     <div class="nav">
-      <button class="key ckey" id="ckey">C</button>
-      <button class="navi" id="navi"></button>
-      <div class="rocker"><button class="key" id="spdUp">▲</button><button class="key" id="spdDn">▼</button></div>
+      <button class="key ckey" id="ckey" aria-label="C (walls on/off)"><span class="cmark"></span></button>
+      <button class="navi" id="navi" aria-label="Navi key (start/pause)"></button>
+      <div class="rocker"><button class="key" id="spdUp" aria-label="Scroll up (faster)"><span class="mk"></span></button><button class="key" id="spdDn" aria-label="Scroll down (slower)"><span class="mk"></span></button></div>
     </div>
     <div class="pad" id="pad">
-      <button class="key" data-k="1">1</button>
-      <button class="key" data-k="2" data-dir="up"><span class="arrow">2</span><small>abc</small></button>
-      <button class="key" data-k="3">3<small>def</small></button>
-      <button class="key" data-k="4" data-dir="left"><span class="arrow">4</span><small>ghi</small></button>
-      <button class="key" data-k="5" data-ok="1">5<small>jkl</small></button>
-      <button class="key" data-k="6" data-dir="right"><span class="arrow">6</span><small>mno</small></button>
-      <button class="key" data-k="7">7<small>pqrs</small></button>
-      <button class="key" data-k="8" data-dir="down"><span class="arrow">8</span><small>tuv</small></button>
-      <button class="key" data-k="9">9<small>wxyz</small></button>
-      <button class="key" data-k="*">*</button>
-      <button class="key" data-k="0">0</button>
-      <button class="key" data-k="#">#</button>
+      <button class="key l" style="left:29px;top:464px" data-k="1"><b>1</b><svg style="margin-left:4px" width="15" height="8" viewBox="0 0 15 8"><circle cx="3.6" cy="3.8" r="2.7"/><circle cx="11.4" cy="3.8" r="2.7"/><path d="M3.6,6.5 H11.4"/></svg></button>
+      <button class="key mid" style="left:119px;top:476px" data-k="2" data-dir="up"><span class="arrow">2</span><small>abc</small></button>
+      <button class="key r" style="left:213px;top:464px" data-k="3"><b>3</b><small>def</small></button>
+      <button class="key l" style="left:32px;top:515px" data-k="4" data-dir="left"><span class="arrow">4</span><small>ghi</small></button>
+      <button class="key mid" style="left:119px;top:527px" data-k="5" data-ok="1"><b>5</b><small>jkl</small></button>
+      <button class="key r" style="left:210px;top:515px" data-k="6" data-dir="right"><span class="arrow">6</span><small>mno</small></button>
+      <button class="key l tall" style="left:35px;top:565px" data-k="7"><b>7</b><small>pqrs</small></button>
+      <button class="key mid" style="left:119px;top:579px" data-k="8" data-dir="down"><span class="arrow">8</span><small>tuv</small></button>
+      <button class="key r" style="left:207px;top:565px" data-k="9"><b>9</b><small>wxyz</small></button>
+      <button class="key l" style="left:38px;top:615px" data-k="*"><svg class="star" width="15" height="15" viewBox="0 0 15 15" style="stroke-width:2.6;transform:translateY(-3px)"><path d="M7.5,1 V14 M1.9,4.25 L13.1,10.75 M1.9,10.75 L13.1,4.25"/></svg><small style="font-size:12px">+</small></button>
+      <button class="key mid" style="left:119px;top:629px" data-k="0"><b>0</b><svg width="12" height="7" viewBox="0 0 12 7"><path d="M1,1.5 V5.5 H11 V1.5"/></svg></button>
+      <button class="key r" style="left:204px;top:615px" data-k="#"><b>#</b><svg width="11" height="10" viewBox="0 0 11 10"><path d="M1,5 L5.5,1 L10,5 M2.5,4 V9 H8.5 V4"/></svg></button>
     </div>
-    <div class="mic"></div>
   </div>
-  <div class="hint">2 4 6 8 to steer · middle key or 5 to start/pause<br>▲▼ speed · C walls on/off · swipe the screen works too</div>
-  <div class="hint" id="ver" style="margin-top:4px">v1.1.0</div>
+  <div class="hint">2 4 6 8 to steer · Navi key or 5 to start/pause<br>scroll key speed · C walls on/off · swipe the screen works too</div>
+  <div class="hint" id="ver" style="margin-top:4px">v1.2.0</div>
 </div>
 <div class="toast" id="toast"></div>
 <script>
@@ -249,7 +347,7 @@ cv.addEventListener('touchend', e => {
 reset(); draw(); setSoft();
 
 // ---- Installable app + over-the-air updates ----
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 function toast(msg, ms = 3000) { const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', ms); }
 if ('serviceWorker' in navigator) {
   const hadController = !!navigator.serviceWorker.controller;

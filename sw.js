@@ -1,5 +1,5 @@
 // Bump VERSION whenever the game changes; phones pick the new version up automatically.
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const CACHE = 'snake-' + VERSION;
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
